@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>爱情基因检测量表（科学版）</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #ff4081;
+            --primary-light: #ff80ab;
+            --primary-dark: #c60055;
+            --secondary-color: #ec407a;
+            --secondary-light: #ff77a9;
+            --accent-color: #ff6e9f;
+            --accent-light: #ffb2d0;
+            --text-primary: #5a3a4e;
+            --text-secondary: #8a6c7d;
+            --text-light: #b39aa8;
+            --background: #fff5f9;
+            --card-bg: #ffffff;
+            --border-radius: 20px;
+            --shadow: 0 10px 30px rgba(255, 64, 129, 0.15);
+            --shadow-light: 0 5px 20px rgba(255, 64, 129, 0.1);
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 页面通用样式 */
+        .page {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            padding-bottom: 30px;
+        }
+        
+        .page.active {
+            display: flex;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* 头部样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 25px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: white;
+            z-index: 1;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            z-index: 1;
+            position: relative;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 64, 129, 0.1);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.3);
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-dark), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover::after {
+            opacity: 1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 64, 129, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 64, 129, 0.1);
+        }
+        
+        .btn-accent {
+            background: linear-gradient(to right, var(--accent-color), #ff8eb5);
+            box-shadow: 0 4px 15px rgba(255, 110, 159, 0.3);
+        }
+        
+        .btn-accent::after {
+            background: linear-gradient(to right, #ff4d87, #ff8eb5);
+        }
+        
+        /* 首页样式 */
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: rgba(255, 64, 129, 0.05);
+            border-radius: 15px;
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateX(5px);
+        }
+        
+        .feature i {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+        
+        .feature-text h4 {
+            font-size: 1.05rem;
+            margin-bottom: 5px;
+            color: var(--primary-dark);
+        }
+        
+        .feature-text p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* 测试页面样式 */
+        .question-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .question-counter {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+        
+        .question-card {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .option {
+            padding: 18px;
+            background-color: rgba(255, 64, 129, 0.05);
+            border-radius: 15px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.05rem;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-primary);
+        }
+        
+        .option:hover {
+            background-color: rgba(255, 64, 129, 0.1);
+            border-color: var(--primary-light);
+        }
+        
+        .option.selected {
+            background-color: rgba(255, 64, 129, 0.15);
+            border-color: var(--primary-color);
+            color: var(--primary-dark);
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(255, 64, 129, 0.2);
+        }
+        
+        .option-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            margin-right: 12px;
+            font-weight: 600;
+            color: var(--primary-color);
+            border: 1px solid rgba(255, 64, 129, 0.2);
+        }
+        
+        /* 测试导航按钮 */
+        .test-nav {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .test-nav .btn {
+            flex: 1;
+            margin-top: 0;
+        }
+        
+        /* 结果页面样式 */
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .result-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+        
+        .result-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        
+        .score-display {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 30px;
+        }
+        
+        .total-score {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(255, 64, 129, 0.1), white);
+            padding: 20px 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .total-score::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, rgba(255, 64, 129, 0.1), rgba(236, 64, 122, 0.1), rgba(255, 64, 129, 0.1));
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0.4;
+        }
+        
+        .score-breakdown {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            gap: 10px;
+        }
+        
+        .score-breakdown > div {
+            flex: 1;
+            min-width: 45%;
+            text-align: center;
+            padding: 8px;
+            background-color: rgba(255, 64, 129, 0.05);
+            border-radius: 12px;
+        }
+        
+        .radar-container {
+            height: 280px;
+            margin: 20px 0 30px;
+        }
+        
+        .result-section {
+            margin-top: 25px;
+        }
+        
+        .result-section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-section-title i {
+            margin-right: 10px;
+        }
+        
+        .result-content {
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+        
+        .gene-info {
+            background-color: rgba(236, 64, 122, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border-left: 4px solid var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .gene-info:hover {
+            transform: translateX(5px);
+        }
+        
+        .suggestion-list {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .suggestion-list li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 5px;
+        }
+        
+        .suggestion-list li::before {
+            content: '♥';
+            color: var(--accent-color);
+            font-size: 1rem;
+            position: absolute;
+            left: -15px;
+            top: 0px;
+        }
+        
+        .buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 40px;
+        }
+        
+        .button-column {
+            flex: 1;
+            min-width: 45%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* 咨询确认页面 */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            display: none;
+        }
+        
+        .confirm-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .confirm-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .confirm-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .confirm-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+        
+        .confirm-text {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        /* 进度条 */
+        .progress-container {
+            height: 8px;
+            background-color: rgba(255, 64, 129, 0.1);
+            border-radius: 4px;
+            margin: 20px 0 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 1.2rem;
+            }
+            
+            .button-column {
+                min-width: 100%;
+            }
+            
+            .buttons-row {
+                gap: 10px;
+            }
+            
+            .test-nav {
+                flex-direction: column;
+            }
+            
+            .score-breakdown > div {
+                min-width: 100%;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+            }
+        }
+        
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 64, 129, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 64, 129, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 自动跳转提示 */
+        .auto-jump-hint {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 64, 129, 0.05);
+            border-radius: 12px;
+        }
+        
+        /* 隐藏上一题按钮 */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* 心形装饰 */
+        .heart-decoration {
+            position: absolute;
+            color: rgba(255, 64, 129, 0.1);
+            font-size: 1.5rem;
+            z-index: 0;
+        }
+        
+        /* 跳转动画 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 首页 -->
+        <div id="home-page" class="page active">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h1 class="title">爱情基因检测量表</h1>
+                <p class="subtitle">基于进化心理学与分子遗传学的科学评估工具</p>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-info-circle"></i> 工具简介</h2>
+                <p>本量表基于进化心理学、分子遗传学及依恋理论，通过对OXTR、AVPR1A、5-HTTLPR、DRD4四个核心爱情相关基因的表型评估，科学分析个体的亲密关系倾向、情感模式与依恋风格。</p>
+                <p>评估结果将提供个性化分析报告与 actionable 建议，帮助您更好地理解自我，提升亲密关系质量。</p>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-star"></i> 核心特征</h2>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-dna"></i>
+                        <div class="feature-text">
+                            <h4>基于科学理论</h4>
+                            <p>依据进化心理学与分子遗传学实证研究</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <div class="feature-text">
+                            <h4>多维度评估</h4>
+                            <p>从亲密共情、忠诚责任、情绪稳定、浪漫激情四个维度全面评估</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-user-cog"></i>
+                        <div class="feature-text">
+                            <h4>个性化报告</h4>
+                            <p>基于测试结果动态生成个性化分析报告与行动建议</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <div class="feature-text">
+                            <h4>隐私保护</h4>
+                            <p>所有数据仅在本地处理，充分保护个人隐私</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-clipboard-check"></i> 作答要求</h2>
+                <p>1. 请根据您的真实感受和行为倾向选择最符合的选项</p>
+                <p>2. 每题只能选择一个答案，选择后系统将自动跳转到下一题</p>
+                <p>3. 共40题，测试时间约8-12分钟</p>
+                <p>4. 请在一个相对安静、不受干扰的环境中完成测试</p>
+                <p>5. 答案没有对错之分，请诚实作答以获得最准确的结果</p>
+            </div>
+            
+            <button id="start-test" class="btn">
+                <i class="fas fa-play-circle"></i> 开始测试
+            </button>
+            
+            <div class="footer">
+                <p>本量表基于进化心理学与分子遗传学研究设计，仅供参考与自我探索</p>
+                <p>© 2023 爱情基因检测量表（科学版）</p>
+            </div>
+        </div>
+        
+        <!-- 测试页面 -->
+        <div id="test-page" class="page">
+            <div class="header">
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div id="question-counter" class="question-counter">第 1 题 / 共 40 题</div>
+            </div>
+            
+            <div class="question-container">
+                <div class="card question-card">
+                    <div id="question-text" class="question-text">我容易对伴侣产生信任感，愿意主动分享内心想法</div>
+                    <div id="options-container" class="options-container">
+                        <!-- 选项将通过JS动态生成 -->
+                    </div>
+                    
+                    <div class="test-nav">
+                        <button id="prev-question" class="btn btn-outline hidden">
+                            <i class="fas fa-arrow-left"></i> 上一题
+                        </button>
+                    </div>
+                    
+                    <div class="auto-jump-hint">
+                        <i class="fas fa-info-circle"></i> 选择答案后，系统将在0.5秒后自动跳转到下一题
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>请选择最符合您真实情况的选项</p>
+            </div>
+        </div>
+        
+        <!-- 结果页面 -->
+        <div id="result-page" class="page">
+            <div class="result-header">
+                <h2 class="result-title">您的爱情基因检测报告</h2>
+                <p class="result-subtitle">基于科学量表的个性化评估结果</p>
+            </div>
+            
+            <div class="score-display">
+                <div class="total-score">
+                    <span id="total-score">0</span>/200
+                </div>
+            </div>
+            
+            <div class="score-breakdown">
+                <div>亲密与共情: <span id="dimension1-score">0</span>/50</div>
+                <div>忠诚与责任: <span id="dimension2-score">0</span>/50</div>
+                <div>情绪稳定: <span id="dimension3-score">0</span>/50</div>
+                <div>浪漫激情: <span id="dimension4-score">0</span>/50</div>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-chart-radar"></i> 爱情特质雷达图</h3>
+                <div class="radar-container">
+                    <canvas id="radar-chart"></canvas>
+                </div>
+            </div>
+            
+            <div id="report-content">
+                <!-- 报告内容将通过JS动态生成 -->
+            </div>
+            
+            <div class="buttons-row">
+                <div class="button-column">
+                    <button id="save-result" class="btn">
+                        <i class="fas fa-download"></i> 保存结果
+                    </button>
+                    <button id="back-home" class="btn btn-outline">
+                        <i class="fas fa-home"></i> 回到首页
+                    </button>
+                </div>
+                <div class="button-column">
+                    <button id="deep-consult" class="btn btn-outline">
+                        <i class="fas fa-comments"></i> 深度咨询
+                    </button>
+                    <button id="more-tests" class="btn">
+                        <i class="fas fa-list"></i> 更多测试
+                    </button>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>本报告基于您的测试结果生成，建议定期复测以观察变化</p>
+                <p>基因仅决定倾向，后天的学习与成长可显著优化关系质量</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 咨询确认模态框 -->
+    <div id="confirm-modal" class="confirm-modal">
+        <div class="confirm-card">
+            <div class="confirm-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3 class="confirm-title">请保存测试结果</h3>
+            <p class="confirm-text">为了更好地为您提供咨询服务，请先保存本次测试结果，然后联系客服提供您的报告。</p>
+            <div class="confirm-buttons">
+                <button id="go-save" class="btn btn-outline">去保存</button>
+                <button id="go-consult" class="btn">我已保存，去咨询</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 用于生成图片的报告内容 -->
+    <div id="report-for-image" style="position: absolute; left: -9999px; top: -9999px; width: 500px; background-color: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+        <!-- 图片报告内容将通过JS动态生成 -->
+    </div>
+
+    <script>
+        // 题目数据 - 从文档中提取的40个题目
+        const questions = [
+            // 维度1：催产素相关（亲密与共情，对应OXTR基因，10题）
+            { text: "我容易对伴侣产生信任感，愿意主动分享内心想法", dimension: 1 },
+            { text: "看到伴侣难过时，我能快速感受到对方的情绪并想安慰", dimension: 1 },
+            { text: "我喜欢和伴侣有亲密的肢体接触（如牵手、拥抱）", dimension: 1 },
+            { text: "在亲密关系中，我愿意为伴侣的需求妥协", dimension: 1 },
+            { text: "我能清晰感知伴侣的情绪变化并及时回应", dimension: 1 },
+            { text: "即使和伴侣产生矛盾，我也相信我们能共同解决", dimension: 1 },
+            { text: "我会主动关心伴侣的日常生活细节（如饮食、作息）", dimension: 1 },
+            { text: "和伴侣相处时，我能感受到内心的平静与安全感", dimension: 1 },
+            { text: "我愿意主动向伴侣表达爱意（如说情话、送礼物）", dimension: 1 },
+            { text: "当伴侣需要帮助时，我会第一时间放下自己的事伸出援手", dimension: 1 },
+            
+            // 维度2：血管升压素相关（忠诚与责任，对应AVPR1A基因，10题）
+            { text: "确定伴侣关系后，我会主动和其他异性保持距离", dimension: 2 },
+            { text: "我会认真规划和伴侣的未来（如共同买房、旅行）", dimension: 2 },
+            { text: "面对外界诱惑时，我能坚定维护自己的伴侣关系", dimension: 2 },
+            { text: "我会主动承担伴侣关系中的责任（如分担家务、解决问题）", dimension: 2 },
+            { text: "我认为'忠诚'是亲密关系中最重要的品质", dimension: 2 },
+            { text: "即使和伴侣产生分歧，我也不会轻易提出分手", dimension: 2 },
+            { text: "我会记住伴侣的重要日子（如生日、纪念日）并准备惊喜", dimension: 2 },
+            { text: "当伴侣遇到困难时，我会把对方的问题当作自己的问题", dimension: 2 },
+            { text: "我愿意为了伴侣的发展调整自己的人生计划", dimension: 2 },
+            { text: "在亲密关系中，我会尽量做到言行一致，不欺骗伴侣", dimension: 2 },
+            
+            // 维度3：5-羟色胺相关（情绪稳定与冲突应对，对应5-HTTLPR基因，10题）
+            { text: "和伴侣吵架后，我能快速冷静下来并理性沟通", dimension: 3 },
+            { text: "即使伴侣暂时忽略我，我也不会轻易产生焦虑或不安", dimension: 3 },
+            { text: "面对亲密关系中的压力（如异地、家庭反对），我能保持情绪稳定", dimension: 3 },
+            { text: "我不会因为伴侣的一句无心之话过度敏感或生气", dimension: 3 },
+            { text: "当亲密关系出现问题时，我会优先想办法解决而非逃避", dimension: 3 },
+            { text: "我能接受伴侣有自己的私人空间，不强迫对方时刻陪伴", dimension: 3 },
+            { text: "情绪低落时，我能通过自我调节恢复，不依赖伴侣的安慰", dimension: 3 },
+            { text: "我不会在情绪激动时对伴侣说伤害对方的话", dimension: 3 },
+            { text: "即使伴侣有小缺点，我也能包容，不会过度苛责", dimension: 3 },
+            { text: "亲密关系中的挫折不会让我长期陷入负面情绪", dimension: 3 },
+            
+            // 维度4：多巴胺相关（浪漫激情与新鲜感，对应DRD4基因，10题）
+            { text: "我对浪漫的场景（如烛光晚餐、星空约会）有强烈的向往", dimension: 4 },
+            { text: "和伴侣相处久了，我会主动创造新鲜感（如尝试新的约会方式）", dimension: 4 },
+            { text: "初次和伴侣相处时，我会快速陷入浪漫激情", dimension: 4 },
+            { text: "我喜欢向伴侣表达浪漫的想法和感受", dimension: 4 },
+            { text: "如果亲密关系变得平淡，我会感到失落并想改变", dimension: 4 },
+            { text: "我对伴侣的新鲜感能维持较长时间", dimension: 4 },
+            { text: "我会主动关注能增进浪漫氛围的事物（如电影、礼物）", dimension: 4 },
+            { text: "和伴侣一起尝试新事物（如旅行、学新技能）会让我更爱对方", dimension: 4 },
+            { text: "我容易被伴侣的新特质或新变化吸引", dimension: 4 },
+            { text: "浪漫的互动（如亲吻、情话）能让我快速感受到爱意", dimension: 4 }
+        ];
+        
+        // 回答选项
+        const options = [
+            { text: "完全不符合", value: 1 },
+            { text: "较不符合", value: 2 },
+            { text: "不确定", value: 3 },
+            { text: "较符合", value: 4 },
+            { text: "完全符合", value: 5 }
+        ];
+        
+        // 测试状态
+        let testState = {
+            currentQuestion: 0,
+            answers: new Array(questions.length).fill(0),
+            dimensionScores: [0, 0, 0, 0], // 四个维度的原始得分
+            isComplete: false
+        };
+        
+        // 页面元素
+        const homePage = document.getElementById('home-page');
+        const testPage = document.getElementById('test-page');
+        const resultPage = document.getElementById('result-page');
+        const startTestBtn = document.getElementById('start-test');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const questionCounter = document.getElementById('question-counter');
+        const progressBar = document.getElementById('progress-bar');
+        const prevQuestionBtn = document.getElementById('prev-question');
+        const totalScoreEl = document.getElementById('total-score');
+        const dimensionScoreEls = [
+            document.getElementById('dimension1-score'),
+            document.getElementById('dimension2-score'),
+            document.getElementById('dimension3-score'),
+            document.getElementById('dimension4-score')
+        ];
+        const reportContent = document.getElementById('report-content');
+        const saveResultBtn = document.getElementById('save-result');
+        const backHomeBtn = document.getElementById('back-home');
+        const deepConsultBtn = document.getElementById('deep-consult');
+        const moreTestsBtn = document.getElementById('more-tests');
+        const confirmModal = document.getElementById('confirm-modal');
+        const goSaveBtn = document.getElementById('go-save');
+        const goConsultBtn = document.getElementById('go-consult');
+        const reportForImage = document.getElementById('report-for-image');
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定事件
+            startTestBtn.addEventListener('click', startTest);
+            prevQuestionBtn.addEventListener('click', goToPrevQuestion);
+            saveResultBtn.addEventListener('click', saveResultAsImage);
+            backHomeBtn.addEventListener('click', goToHome);
+            deepConsultBtn.addEventListener('click', showConsultConfirm);
+            moreTestsBtn.addEventListener('click', goToMoreTests);
+            goSaveBtn.addEventListener('click', closeConfirmModal);
+            goConsultBtn.addEventListener('click', goToConsult);
+            
+            // 初始化图表
+            initializeChart();
+            
+            // 显示首页
+            showPage(homePage);
+        });
+        
+        // 页面切换函数
+        function showPage(page) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+            });
+            
+            // 显示指定页面
+            page.classList.add('active');
+            
+            // 如果是测试页面，初始化问题
+            if (page === testPage) {
+                loadQuestion(testState.currentQuestion);
+            }
+            
+            // 如果是结果页面，生成报告
+            if (page === resultPage && !testState.isComplete) {
+                calculateResults();
+                generateReport();
+                testState.isComplete = true;
+            }
+        }
+        
+        // 开始测试
+        function startTest() {
+            // 重置测试状态
+            testState = {
+                currentQuestion: 0,
+                answers: new Array(questions.length).fill(0),
+                dimensionScores: [0, 0, 0, 0],
+                isComplete: false
+            };
+            
+            // 切换到测试页面
+            showPage(testPage);
+        }
+        
+        // 加载问题
+        function loadQuestion(index) {
+            if (index >= questions.length) {
+                // 所有问题已回答，跳转到结果页面
+                showPage(resultPage);
+                return;
+            }
+            
+            const question = questions[index];
+            questionText.textContent = question.text;
+            
+            // 更新进度
+            const progress = ((index + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            questionCounter.textContent = `第 ${index + 1} 题 / 共 ${questions.length} 题`;
+            
+            // 更新上一题按钮状态
+            if (index === 0) {
+                prevQuestionBtn.classList.add('hidden');
+            } else {
+                prevQuestionBtn.classList.remove('hidden');
+            }
+            
+            // 清空选项容器
+            optionsContainer.innerHTML = '';
+            
+            // 添加选项
+            options.forEach((option, optionIndex) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                if (testState.answers[index] === option.value) {
+                    optionElement.classList.add('selected');
+                }
+                
+                optionElement.innerHTML = `
+                    <div>
+                        <span class="option-number">${optionIndex + 1}</span>
+                        ${option.text}
+                    </div>
+                    ${testState.answers[index] === option.value ? '<i class="fas fa-check-circle"></i>' : ''}
+                `;
+                
+                optionElement.addEventListener('click', () => {
+                    selectOption(index, option.value);
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+        
+        // 选择选项
+        function selectOption(questionIndex, value) {
+            // 保存答案
+            testState.answers[questionIndex] = value;
+            
+            // 更新当前问题显示
+            const optionElements = document.querySelectorAll('.option');
+            optionElements.forEach((el, idx) => {
+                el.classList.remove('selected');
+                el.innerHTML = `
+                    <div>
+                        <span class="option-number">${idx + 1}</span>
+                        ${options[idx].text}
+                    </div>
+                `;
+            });
+            
+            // 标记选中的选项
+            if (value > 0) {
+                optionElements[value - 1].classList.add('selected');
+                optionElements[value - 1].innerHTML = `
+                    <div>
+                        <span class="option-number">${value}</span>
+                        ${options[value - 1].text}
+                    </div>
+                    <i class="fas fa-check-circle"></i>
+                `;
+                
+                // 添加脉冲动画
+                optionElements[value - 1].classList.add('pulse');
+                setTimeout(() => {
+                    optionElements[value - 1].classList.remove('pulse');
+                }, 500);
+                
+                // 延迟0.5秒后自动跳转到下一题
+                setTimeout(() => {
+                    // 如果当前是最后一题，跳转到结果页面
+                    if (questionIndex === questions.length - 1) {
+                        showPage(resultPage);
+                    } else {
+                        testState.currentQuestion++;
+                        loadQuestion(testState.currentQuestion);
+                    }
+                }, 500); // 从1000毫秒缩短到500毫秒
+            }
+        }
+        
+        // 前往上一题
+        function goToPrevQuestion() {
+            if (testState.currentQuestion > 0) {
+                testState.currentQuestion--;
+                loadQuestion(testState.currentQuestion);
+            }
+        }
+        
+        // 计算测试结果
+        function calculateResults() {
+            // 重置维度得分
+            testState.dimensionScores = [0, 0, 0, 0];
+            
+            // 计算每个维度的原始得分
+            for (let i = 0; i < questions.length; i++) {
+                const question = questions[i];
+                const answer = testState.answers[i];
+                
+                // 将答案值加到对应维度
+                testState.dimensionScores[question.dimension - 1] += answer;
+            }
+            
+            // 计算总分（四个维度原始得分的和）
+            const totalRawScore = testState.dimensionScores.reduce((sum, score) => sum + score, 0);
+            
+            // 显示分数
+            totalScoreEl.textContent = totalRawScore;
+            
+            for (let i = 0; i < 4; i++) {
+                dimensionScoreEls[i].textContent = testState.dimensionScores[i];
+            }
+            
+            // 更新雷达图
+            updateChart();
+        }
+        
+        // 图表变量
+        let radarChart;
+        
+        // 初始化图表
+        function initializeChart() {
+            const ctx = document.getElementById('radar-chart').getContext('2d');
+            
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['亲密与共情', '忠诚与责任', '情绪稳定', '浪漫激情'],
+                    datasets: [{
+                        label: '您的得分',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: 'rgba(255, 64, 129, 0.2)',
+                        borderColor: 'rgba(255, 64, 129, 0.8)',
+                        pointBackgroundColor: 'rgba(255, 64, 129, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(255, 64, 129, 1)',
+                        borderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            suggestedMin: 10,
+                            suggestedMax: 50,
+                            ticks: {
+                                display: false,
+                                stepSize: 10
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 13,
+                                    weight: '600'
+                                },
+                                color: 'var(--text-primary)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 更新图表数据
+        function updateChart() {
+            if (radarChart) {
+                radarChart.data.datasets[0].data = testState.dimensionScores;
+                radarChart.update();
+            }
+        }
+        
+        // 生成报告
+        function generateReport() {
+            // 计算总分
+            const totalScore = testState.dimensionScores.reduce((sum, score) => sum + score, 0);
+            
+            // 确定每个维度的等级
+            const dimensionLevels = testState.dimensionScores.map(score => {
+                if (score <= 20) return 'low';
+                if (score <= 35) return 'medium';
+                return 'high';
+            });
+            
+            // 确定综合等级
+            let overallLevel;
+            if (totalScore <= 80) overallLevel = 'low';
+            else if (totalScore <= 140) overallLevel = 'medium';
+            else overallLevel = 'high';
+            
+            // 维度名称
+            const dimensionNames = [
+                '亲密与共情',
+                '忠诚与责任', 
+                '情绪稳定与冲突应对',
+                '浪漫激情与新鲜感'
+            ];
+            
+            // 维度描述
+            const dimensionDescriptions = {
+                low: [
+                    '亲密感知能力弱，共情能力不足，对伴侣的信任和亲密表达较为回避，难以主动分享内心想法，肢体亲密接触意愿低，亲密关系中易出现"情感疏离"状态。',
+                    '忠诚意识和责任意识较弱，对亲密关系的长期规划不足，易受外界诱惑，面对关系问题时倾向于逃避责任，难以主动维护关系稳定。',
+                    '情绪稳定性差，对关系中的负面信号过度敏感，面对冲突时易陷入激烈情绪（如愤怒、焦虑），难以理性沟通，冲突应对能力弱，易因情绪问题伤害亲密关系。',
+                    '浪漫感知力弱，对激情体验的需求低，不擅长创造亲密关系中的新鲜感，关系易陷入平淡，对伴侣的浪漫表达回应不足，可能让伴侣感到"无趣"。'
+                ],
+                medium: [
+                    '亲密感知能力中等，共情能力一般，能在一定程度上信任伴侣、表达亲密，但在关系压力下可能出现回避倾向，对伴侣的情绪感知不够敏锐，需要主动练习亲密互动。',
+                    '忠诚意识和责任意识中等，能基本维护亲密关系的忠诚，愿意承担部分关系责任，但在诱惑或压力下可能出现动摇，对关系的规划性不够清晰。',
+                    '情绪稳定性中等，面对一般冲突时能保持基本理性，但在重大压力或激烈矛盾下可能出现情绪波动，冲突应对能力一般，需要学习更有效的情绪调节方法。',
+                    '浪漫感知力中等，有一定的激情需求，能接受平淡的关系但也希望有适量的浪漫互动，可在伴侣引导下参与浪漫活动，需要主动学习创造新鲜感。'
+                ],
+                high: [
+                    '亲密感知能力强，共情能力突出，能快速信任伴侣、主动分享内心，擅长通过肢体接触和语言表达亲密，对伴侣的情绪变化感知敏锐，能及时给予回应，亲密关系中的安全感较强。',
+                    '忠诚意识和责任意识强，能坚定维护伴侣关系的忠诚，主动承担关系中的责任，善于规划关系未来，面对问题时积极解决，关系稳定性和可信度高。',
+                    '情绪稳定性强，面对冲突和压力时能快速冷静，善于通过理性沟通解决问题，对伴侣的情绪包容度高，不易因情绪问题引发关系矛盾，关系中的情绪管理能力突出。',
+                    '浪漫感知力强，对激情体验的需求高，擅长主动创造浪漫场景和新鲜感，能快速回应伴侣的浪漫表达，亲密关系中的激情体验丰富，关系氛围更活跃。'
+                ]
+            };
+            
+            // 综合描述
+            const overallDescriptions = {
+                low: '爱情相关的核心特质（亲密、忠诚、情绪稳定、浪漫）整体表现较弱，先天基因倾向和后天表型特征均偏向"关系回避"或"关系不适"，在亲密关系中易出现矛盾和冲突，需要针对性提升多个维度的能力。',
+                medium: '爱情相关特质整体表现中等，部分维度可能表现较好，部分维度存在不足，先天基因倾向受后天环境影响较大，通过主动学习和练习，可显著提升亲密关系质量。',
+                high: '爱情相关特质整体表现优秀，先天基因倾向（如安全型依恋、高忠诚感）和后天表型特征（如强共情、高情绪稳定）均有利于亲密关系的建立和维持，能快速适应关系变化，主动解决关系问题，亲密关系质量较高。'
+            };
+            
+            // 生成建议
+            const suggestions = generateSuggestions(dimensionLevels, overallLevel);
+            
+            // 构建报告HTML
+            let reportHTML = '';
+            
+            // 综合评估部分
+            reportHTML += `
+                <div class="card result-section">
+                    <h3 class="result-section-title"><i class="fas fa-clipboard-list"></i> 综合评估</h3>
+                    <div class="result-content">
+                        <p>您的爱情特质综合得分为 <strong>${totalScore}/200</strong>，属于<strong>${overallLevel === 'low' ? '低综合型' : overallLevel === 'medium' ? '中等综合型' : '高综合型'}</strong>。</p>
+                        <p>${overallDescriptions[overallLevel]}</p>
+                    </div>
+                </div>
+            `;
+            
+            // 各维度分析
+            reportHTML += `
+                <div class="card result-section">
+                    <h3 class="result-section-title"><i class="fas fa-chart-bar"></i> 各维度分析</h3>
+                    <div class="result-content">
+            `;
+            
+            for (let i = 0; i < 4; i++) {
+                const score = testState.dimensionScores[i];
+                const level = dimensionLevels[i];
+                const levelText = level === 'low' ? '较低' : level === 'medium' ? '中等' : '较高';
+                
+                reportHTML += `
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: var(--primary-dark); margin-bottom: 8px;">${dimensionNames[i]}: ${score}/50 (${levelText})</h4>
+                        <p style="color: var(--text-primary);">${dimensionDescriptions[level][i]}</p>
+                    </div>
+                `;
+            }
+            
+            reportHTML += `
+                    </div>
+                </div>
+            `;
+            
+            // 基因模拟解读
+            reportHTML += `
+                <div class="card result-section">
+                    <h3 class="result-section-title"><i class="fas fa-dna"></i> 基因倾向模拟解读</h3>
+                    <div class="result-content">
+                        <p style="color: var(--text-secondary);"><em>注：以下为基于您表型得分的基因倾向模拟分析，真实基因检测需通过专业实验室完成。</em></p>
+                        
+                        <div class="gene-info">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 5px;">催产素受体基因 (OXTR)</h4>
+                            <p style="color: var(--text-primary);">基于您的"亲密与共情"得分，您的先天倾向可能为：${dimensionLevels[0] === 'high' ? 'GG型（安全型依恋倾向）' : dimensionLevels[0] === 'medium' ? 'AG型（中等依恋倾向）' : 'AA型（回避型依恋倾向）'}。</p>
+                        </div>
+                        
+                        <div class="gene-info">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 5px;">血管升压素受体基因 (AVPR1A)</h4>
+                            <p style="color: var(--text-primary);">基于您的"忠诚与责任"得分，您的先天倾向可能为：${dimensionLevels[1] === 'high' ? '长链型（高忠诚感倾向）' : dimensionLevels[1] === 'medium' ? '中等忠诚倾向' : '短链型（低忠诚感倾向）'}。</p>
+                        </div>
+                        
+                        <div class="gene-info">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 5px;">5-羟色胺转运体基因 (5-HTTLPR)</h4>
+                            <p style="color: var(--text-primary);">基于您的"情绪稳定"得分，您的先天倾向可能为：${dimensionLevels[2] === 'high' ? 'LL型（高情绪稳定性）' : dimensionLevels[2] === 'medium' ? 'LS型（中等情绪稳定性）' : 'SS型（低情绪稳定性）'}。</p>
+                        </div>
+                        
+                        <div class="gene-info">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 5px;">多巴胺D4受体基因 (DRD4)</h4>
+                            <p style="color: var(--text-primary);">基于您的"浪漫激情"得分，您的先天倾向可能为：${dimensionLevels[3] === 'high' ? '短链型（高浪漫感知力）' : dimensionLevels[3] === 'medium' ? '中等浪漫感知力' : '长链型（低浪漫感知力）'}。</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 行动建议部分
+            reportHTML += `
+                <div class="card result-section">
+                    <h3 class="result-section-title"><i class="fas fa-hands-helping"></i> 个性化行动建议</h3>
+                    <div class="result-content">
+                        ${suggestions}
+                        
+                        <div style="margin-top: 25px; padding: 15px; background-color: rgba(236, 64, 122, 0.05); border-radius: 12px;">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 10px;"><i class="fas fa-lightbulb"></i> 通用建议</h4>
+                            <ul class="suggestion-list">
+                                <li><strong>尊重基因差异：</strong>理解自身的爱情特质受先天倾向影响，不盲目否定自己，通过后天努力优化关系模式。</li>
+                                <li><strong>重视后天环境：</strong>基因仅决定"倾向"，后天的关系互动、学习成长可显著改变表型表现，保持积极的成长心态。</li>
+                                <li><strong>定期复测：</strong>建议1年后重新进行表型评估，观察自身的成长变化，调整行动策略。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 将报告HTML插入页面
+            reportContent.innerHTML = reportHTML;
+            
+            // 同时为图片生成准备报告内容
+            prepareReportForImage(totalScore, dimensionLevels, overallLevel);
+        }
+        
+        // 生成建议
+        function generateSuggestions(dimensionLevels, overallLevel) {
+            let suggestionsHTML = '';
+            
+            // 针对低分维度的建议
+            const lowDimensionIndices = [];
+            dimensionLevels.forEach((level, index) => {
+                if (level === 'low') lowDimensionIndices.push(index);
+            });
+            
+            if (lowDimensionIndices.length > 0) {
+                suggestionsHTML += '<h4 style="color: var(--primary-dark); margin-bottom: 10px;">需重点提升的维度：</h4>';
+                
+                lowDimensionIndices.forEach(index => {
+                    const dimensionNames = [
+                        '亲密与共情',
+                        '忠诚与责任', 
+                        '情绪稳定与冲突应对',
+                        '浪漫激情与新鲜感'
+                    ];
+                    
+                    const dimensionSuggestions = [
+                        '<ul class="suggestion-list"><li><strong>日常亲密练习：</strong>每天主动与伴侣进行1次高质量亲密互动（如3分钟拥抱、分享1件内心小事），逐步提升亲密感知能力。</li><li><strong>共情训练：</strong>每周进行2次"情绪换位思考"练习，站在伴侣的角度思考其行为背后的情绪需求。</li><li><strong>亲密表达学习：</strong>阅读《爱的五种语言》，识别自己和伴侣的"爱的语言"，针对性地表达亲密。</li></ul>',
+                        '<ul class="suggestion-list"><li><strong>责任清单制定：</strong>与伴侣共同制定"关系责任清单"（如分担家务、定期沟通），明确双方的责任和义务。</li><li><strong>诱惑规避训练：</strong>主动远离可能引发情感背叛的场景，设置明确的"情感边界"。</li><li><strong>未来规划练习：</strong>每月与伴侣进行1次"关系未来规划"沟通，共同讨论短期和长期目标。</li></ul>',
+                        '<ul class="suggestion-list"><li><strong>情绪调节技巧学习：</strong>学习"478呼吸法"，在情绪激动时立即使用，快速冷静。</li><li><strong>冲突暂停机制：</strong>与伴侣约定"冲突暂停信号"，当冲突升级时，暂停沟通，冷静后再理性讨论。</li><li><strong>情绪日记记录：</strong>每天记录1次关系中的情绪波动，分析情绪产生的原因，提升情绪感知能力。</li></ul>',
+                        '<ul class="suggestion-list"><li><strong>浪漫清单打卡：</strong>与伴侣共同制定"浪漫小事清单"，每周完成1-2件，逐步培养浪漫感知力。</li><li><strong>新鲜感创造：</strong>每月尝试1次新的约会方式，打破关系的平淡感。</li><li><strong>浪漫表达练习：</strong>每天对伴侣说1句肯定或浪漫的话，提升浪漫表达能力。</li></ul>'
+                    ];
+                    
+                    suggestionsHTML += `
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="color: var(--secondary-color); margin-bottom: 5px;">${dimensionNames[index]}</h5>
+                            ${dimensionSuggestions[index]}
+                        </div>
+                    `;
+                });
+            }
+            
+            // 针对综合类型的建议
+            if (overallLevel === 'medium') {
+                suggestionsHTML += `
+                    <h4 style="color: var(--primary-dark); margin-top: 20px; margin-bottom: 10px;">中等综合型提升策略：</h4>
+                    <ul class="suggestion-list">
+                        <li><strong>维度强化：</strong>识别自己表现较弱的1-2个维度，优先针对性提升（参考上述对应维度的建议）。</li>
+                        <li><strong>关系复盘：</strong>每周与伴侣进行1次"关系复盘"沟通，分享彼此的感受和需求，肯定对方的优点，提出需要改进的地方。</li>
+                        <li><strong>共同成长：</strong>与伴侣一起参与亲密关系相关的课程或读书会，共同学习提升关系质量的方法。</li>
+                        <li><strong>优势发挥：</strong>充分发挥自己表现较好的维度，以优势带动劣势提升，增强关系中的自信感。</li>
+                    </ul>
+                `;
+            } else if (overallLevel === 'high') {
+                suggestionsHTML += `
+                    <h4 style="color: var(--primary-dark); margin-top: 20px; margin-bottom: 10px;">高综合型优化策略：</h4>
+                    <ul class="suggestion-list">
+                        <li><strong>关系升华：</strong>与伴侣共同设定更高层次的关系目标（如共同完成一个项目、一起做公益），进一步提升关系的深度和默契度。</li>
+                        <li><strong>持续保鲜：</strong>即使关系质量较高，仍需定期创造新鲜感（如每年安排1-2次长途旅行、尝试新的共同爱好），避免关系陷入平淡。</li>
+                        <li><strong>风险预防：</strong>关注关系中的潜在风险（如长期异地、家庭矛盾），提前制定应对方案，主动维护关系稳定。</li>
+                        <li><strong>经验分享：</strong>可将自己的亲密关系经营经验分享给身边有需要的人，在分享中进一步巩固自身的优势。</li>
+                    </ul>
+                `;
+            }
+            
+            return suggestionsHTML;
+        }
+        
+        // 准备图片报告内容
+        function prepareReportForImage(totalScore, dimensionLevels, overallLevel) {
+            const dimensionNames = ['亲密与共情', '忠诚与责任', '情绪稳定', '浪漫激情'];
+            const dimensionScores = testState.dimensionScores;
+            
+            // 构建完整的图片报告HTML
+            let imageHTML = `
+                <div style="font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; color: #5a3a4e; max-width: 500px; background-color: white;">
+                    <div style="text-align: center; margin-bottom: 30px; padding: 25px; background: linear-gradient(135deg, #ff4081, #ec407a); color: white; border-radius: 20px; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px); background-size: 30px 30px; opacity: 0.3;"></div>
+                        <h1 style="font-size: 1.8rem; margin-bottom: 10px; position: relative;">爱情基因检测报告</h1>
+                        <p style="opacity: 0.9; position: relative;">基于科学量表的个性化评估结果</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <div style="font-size: 2.2rem; font-weight: 700; color: #ff4081; background: linear-gradient(135deg, rgba(255, 64, 129, 0.1), white); padding: 20px 40px; border-radius: 20px; display: inline-block; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); position: relative; overflow: hidden;">
+                            <div style="position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; background: linear-gradient(45deg, rgba(255, 64, 129, 0.1), rgba(236, 64, 122, 0.1), rgba(255, 64, 129, 0.1)); z-index: -1; filter: blur(20px); opacity: 0.4;"></div>
+                            ${totalScore}<span style="font-size: 1.5rem; color: #666;">/200</span>
+                        </div>
+                        <div style="margin-top: 15px; font-size: 0.9rem; color: #8a6c7d; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px;">
+                            <div style="flex: 1; min-width: 45%; text-align: center; padding: 8px; background-color: rgba(255, 64, 129, 0.05); border-radius: 12px;">亲密与共情: ${dimensionScores[0]}/50</div>
+                            <div style="flex: 1; min-width: 45%; text-align: center; padding: 8px; background-color: rgba(255, 64, 129, 0.05); border-radius: 12px;">忠诚与责任: ${dimensionScores[1]}/50</div>
+                            <div style="flex: 1; min-width: 45%; text-align: center; padding: 8px; background-color: rgba(255, 64, 129, 0.05); border-radius: 12px;">情绪稳定: ${dimensionScores[2]}/50</div>
+                            <div style="flex: 1; min-width: 45%; text-align: center; padding: 8px; background-color: rgba(255, 64, 129, 0.05); border-radius: 12px;">浪漫激情: ${dimensionScores[3]}/50</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background-color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid rgba(255, 64, 129, 0.1);">
+                        <h3 style="color: #c60055; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 2px solid #ff80ab; padding-bottom: 8px; display: flex; align-items: center;">
+                            <span style="margin-right: 10px; color: #ff4081;">♥</span> 综合评估
+                        </h3>
+                        <p style="line-height: 1.7; margin-bottom: 10px; color: #5a3a4e;">您的爱情特质综合得分为 <strong>${totalScore}/200</strong>，属于<strong>${overallLevel === 'low' ? '低综合型' : overallLevel === 'medium' ? '中等综合型' : '高综合型'}</strong>。</p>
+                        <p style="line-height: 1.7; color: #5a3a4e;">
+                            ${overallLevel === 'low' ? '爱情相关的核心特质（亲密、忠诚、情绪稳定、浪漫）整体表现较弱，先天基因倾向和后天表型特征均偏向"关系回避"或"关系不适"，在亲密关系中易出现矛盾和冲突，需要针对性提升多个维度的能力。' : overallLevel === 'medium' ? '爱情相关特质整体表现中等，部分维度可能表现较好，部分维度存在不足，先天基因倾向受后天环境影响较大，通过主动学习和练习，可显著提升亲密关系质量。' : '爱情相关特质整体表现优秀，先天基因倾向（如安全型依恋、高忠诚感）和后天表型特征（如强共情、高情绪稳定）均有利于亲密关系的建立和维持，能快速适应关系变化，主动解决关系问题，亲密关系质量较高。'}
+                        </p>
+                    </div>
+                    
+                    <div style="background-color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid rgba(255, 64, 129, 0.1);">
+                        <h3 style="color: #c60055; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 2px solid #ff80ab; padding-bottom: 8px; display: flex; align-items: center;">
+                            <span style="margin-right: 10px; color: #ff4081;">♥</span> 各维度分析
+                        </h3>
+            `;
+            
+            // 维度描述
+            const dimensionDescriptions = {
+                low: [
+                    '亲密感知能力弱，共情能力不足，对伴侣的信任和亲密表达较为回避，难以主动分享内心想法，肢体亲密接触意愿低，亲密关系中易出现"情感疏离"状态。',
+                    '忠诚意识和责任意识较弱，对亲密关系的长期规划不足，易受外界诱惑，面对关系问题时倾向于逃避责任，难以主动维护关系稳定。',
+                    '情绪稳定性差，对关系中的负面信号过度敏感，面对冲突时易陷入激烈情绪（如愤怒、焦虑），难以理性沟通，冲突应对能力弱，易因情绪问题伤害亲密关系。',
+                    '浪漫感知力弱，对激情体验的需求低，不擅长创造亲密关系中的新鲜感，关系易陷入平淡，对伴侣的浪漫表达回应不足，可能让伴侣感到"无趣"。'
+                ],
+                medium: [
+                    '亲密感知能力中等，共情能力一般，能在一定程度上信任伴侣、表达亲密，但在关系压力下可能出现回避倾向，对伴侣的情绪感知不够敏锐，需要主动练习亲密互动。',
+                    '忠诚意识和责任意识中等，能基本维护亲密关系的忠诚，愿意承担部分关系责任，但在诱惑或压力下可能出现动摇，对关系的规划性不够清晰。',
+                    '情绪稳定性中等，面对一般冲突时能保持基本理性，但在重大压力或激烈矛盾下可能出现情绪波动，冲突应对能力一般，需要学习更有效的情绪调节方法。',
+                    '浪漫感知力中等，有一定的激情需求，能接受平淡的关系但也希望有适量的浪漫互动，可在伴侣引导下参与浪漫活动，需要主动学习创造新鲜感。'
+                ],
+                high: [
+                    '亲密感知能力强，共情能力突出，能快速信任伴侣、主动分享内心，擅长通过肢体接触和语言表达亲密，对伴侣的情绪变化感知敏锐，能及时给予回应，亲密关系中的安全感较强。',
+                    '忠诚意识和责任意识强，能坚定维护伴侣关系的忠诚，主动承担关系中的责任，善于规划关系未来，面对问题时积极解决，关系稳定性和可信度高。',
+                    '情绪稳定性强，面对冲突和压力时能快速冷静，善于通过理性沟通解决问题，对伴侣的情绪包容度高，不易因情绪问题引发关系矛盾，关系中的情绪管理能力突出。',
+                    '浪漫感知力强，对激情体验的需求高，擅长主动创造浪漫场景和新鲜感，能快速回应伴侣的浪漫表达，亲密关系中的激情体验丰富，关系氛围更活跃。'
+                ]
+            };
+            
+            for (let i = 0; i < 4; i++) {
+                const levelText = dimensionLevels[i] === 'low' ? '较低' : dimensionLevels[i] === 'medium' ? '中等' : '较高';
+                imageHTML += `
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #ff4081; margin-bottom: 8px; font-size: 1.1rem;">${dimensionNames[i]}: ${dimensionScores[i]}/50 (${levelText})</h4>
+                        <p style="line-height: 1.6; font-size: 0.95rem; color: #5a3a4e;">${dimensionDescriptions[dimensionLevels[i]][i]}</p>
+                    </div>
+                `;
+            }
+            
+            imageHTML += `
+                    </div>
+                    
+                    <div style="background-color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid rgba(255, 64, 129, 0.1);">
+                        <h3 style="color: #c60055; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 2px solid #ff80ab; padding-bottom: 8px; display: flex; align-items: center;">
+                            <span style="margin-right: 10px; color: #ff4081;">♥</span> 基因倾向模拟解读
+                        </h3>
+                        <p style="font-style: italic; color: #8a6c7d; margin-bottom: 15px; font-size: 0.9rem;">注：以下为基于您表型得分的基因倾向模拟分析，真实基因检测需通过专业实验室完成。</p>
+                        
+                        <div style="background-color: rgba(236, 64, 122, 0.05); padding: 15px; border-radius: 12px; margin: 15px 0; border-left: 4px solid #ec407a;">
+                            <h4 style="color: #ec407a; margin-bottom: 5px; font-size: 1.05rem;">催产素受体基因 (OXTR)</h4>
+                            <p style="line-height: 1.6; color: #5a3a4e;">基于您的"亲密与共情"得分，您的先天倾向可能为：${dimensionLevels[0] === 'high' ? 'GG型（安全型依恋倾向）' : dimensionLevels[0] === 'medium' ? 'AG型（中等依恋倾向）' : 'AA型（回避型依恋倾向）'}。</p>
+                        </div>
+                        
+                        <div style="background-color: rgba(236, 64, 122, 0.05); padding: 15px; border-radius: 12px; margin: 15px 0; border-left: 4px solid #ec407a;">
+                            <h4 style="color: #ec407a; margin-bottom: 5px; font-size: 1.05rem;">血管升压素受体基因 (AVPR1A)</h4>
+                            <p style="line-height: 1.6; color: #5a3a4e;">基于您的"忠诚与责任"得分，您的先天倾向可能为：${dimensionLevels[1] === 'high' ? '长链型（高忠诚感倾向）' : dimensionLevels[1] === 'medium' ? '中等忠诚倾向' : '短链型（低忠诚感倾向）'}。</p>
+                        </div>
+                        
+                        <div style="background-color: rgba(236, 64, 122, 0.05); padding: 15px; border-radius: 12px; margin: 15px 0; border-left: 4px solid #ec407a;">
+                            <h4 style="color: #ec407a; margin-bottom: 5px; font-size: 1.05rem;">5-羟色胺转运体基因 (5-HTTLPR)</h4>
+                            <p style="line-height: 1.6; color: #5a3a4e;">基于您的"情绪稳定"得分，您的先天倾向可能为：${dimensionLevels[2] === 'high' ? 'LL型（高情绪稳定性）' : dimensionLevels[2] === 'medium' ? 'LS型（中等情绪稳定性）' : 'SS型（低情绪稳定性）'}。</p>
+                        </div>
+                        
+                        <div style="background-color: rgba(236, 64, 122, 0.05); padding: 15px; border-radius: 12px; margin: 15px 0; border-left: 4px solid #ec407a;">
+                            <h4 style="color: #ec407a; margin-bottom: 5px; font-size: 1.05rem;">多巴胺D4受体基因 (DRD4)</h4>
+                            <p style="line-height: 1.6; color: #5a3a4e;">基于您的"浪漫激情"得分，您的先天倾向可能为：${dimensionLevels[3] === 'high' ? '短链型（高浪漫感知力）' : dimensionLevels[3] === 'medium' ? '中等浪漫感知力' : '长链型（低浪漫感知力）'}。</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background-color: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid rgba(255, 64, 129, 0.1);">
+                        <h3 style="color: #c60055; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 2px solid #ff80ab; padding-bottom: 8px; display: flex; align-items: center;">
+                            <span style="margin-right: 10px; color: #ff4081;">♥</span> 个性化行动建议
+                        </h3>
+            `;
+            
+            // 添加行动建议
+            const lowDimensionIndices = [];
+            dimensionLevels.forEach((level, index) => {
+                if (level === 'low') lowDimensionIndices.push(index);
+            });
+            
+            if (lowDimensionIndices.length > 0) {
+                imageHTML += `<h4 style="color: #ff4081; margin-bottom: 10px; font-size: 1.1rem;">需重点提升的维度：</h4>`;
+                
+                lowDimensionIndices.forEach(index => {
+                    const dimensionNames = ['亲密与共情', '忠诚与责任', '情绪稳定与冲突应对', '浪漫激情与新鲜感'];
+                    
+                    const dimensionSuggestions = [
+                        '• 日常亲密练习：每天主动与伴侣进行1次高质量亲密互动（如3分钟拥抱、分享1件内心小事），逐步提升亲密感知能力。<br>• 共情训练：每周进行2次"情绪换位思考"练习，站在伴侣的角度思考其行为背后的情绪需求。<br>• 亲密表达学习：阅读《爱的五种语言》，识别自己和伴侣的"爱的语言"，针对性地表达亲密。',
+                        '• 责任清单制定：与伴侣共同制定"关系责任清单"（如分担家务、定期沟通），明确双方的责任和义务。<br>• 诱惑规避训练：主动远离可能引发情感背叛的场景，设置明确的"情感边界"。<br>• 未来规划练习：每月与伴侣进行1次"关系未来规划"沟通，共同讨论短期和长期目标。',
+                        '• 情绪调节技巧学习：学习"478呼吸法"，在情绪激动时立即使用，快速冷静。<br>• 冲突暂停机制：与伴侣约定"冲突暂停信号"，当冲突升级时，暂停沟通，冷静后再理性讨论。<br>• 情绪日记记录：每天记录1次关系中的情绪波动，分析情绪产生的原因，提升情绪感知能力。',
+                        '• 浪漫清单打卡：与伴侣共同制定"浪漫小事清单"，每周完成1-2件，逐步培养浪漫感知力。<br>• 新鲜感创造：每月尝试1次新的约会方式，打破关系的平淡感。<br>• 浪漫表达练习：每天对伴侣说1句肯定或浪漫的话，提升浪漫表达能力。'
+                    ];
+                    
+                    imageHTML += `
+                        <div style="margin-bottom: 15px;">
+                            <h5 style="color: #ec407a; margin-bottom: 5px; font-size: 1rem;">${dimensionNames[index]}</h5>
+                            <p style="line-height: 1.6; font-size: 0.95rem; color: #5a3a4e;">${dimensionSuggestions[index]}</p>
+                        </div>
+                    `;
+                });
+            }
+            
+            if (overallLevel === 'medium') {
+                imageHTML += `
+                    <h4 style="color: #ff4081; margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem;">中等综合型提升策略：</h4>
+                    <p style="line-height: 1.6; font-size: 0.95rem; color: #5a3a4e;">
+                        • 维度强化：识别自己表现较弱的1-2个维度，优先针对性提升。<br>
+                        • 关系复盘：每周与伴侣进行1次"关系复盘"沟通，分享彼此的感受和需求。<br>
+                        • 共同成长：与伴侣一起参与亲密关系相关的课程或读书会，共同学习提升关系质量的方法。<br>
+                        • 优势发挥：充分发挥自己表现较好的维度，以优势带动劣势提升，增强关系中的自信感。
+                    </p>
+                `;
+            } else if (overallLevel === 'high') {
+                imageHTML += `
+                    <h4 style="color: #ff4081; margin-top: 20px; margin-bottom: 10px; font-size: 1.1rem;">高综合型优化策略：</h4>
+                    <p style="line-height: 1.6; font-size: 0.95rem; color: #5a3a4e;">
+                        • 关系升华：与伴侣共同设定更高层次的关系目标（如共同完成一个项目、一起做公益），进一步提升关系的深度和默契度。<br>
+                        • 持续保鲜：即使关系质量较高，仍需定期创造新鲜感（如每年安排1-2次长途旅行、尝试新的共同爱好），避免关系陷入平淡。<br>
+                        • 风险预防：关注关系中的潜在风险（如长期异地、家庭矛盾），提前制定应对方案，主动维护关系稳定。<br>
+                        • 经验分享：可将自己的亲密关系经营经验分享给身边有需要的人，在分享中进一步巩固自身的优势。
+                    </p>
+                `;
+            }
+            
+            imageHTML += `
+                    </div>
+                    
+                    <div style="margin-top: 30px; text-align: center; font-size: 0.8rem; color: #8a6c7d; padding-top: 20px; border-top: 1px solid #f0e6ed;">
+                        <p>© 2023 爱情基因检测量表（科学版）</p>
+                        <p>本报告基于进化心理学与分子遗传学研究设计，仅供参考与自我探索</p>
+                        <p>基因仅决定倾向，后天的学习与成长可显著优化关系质量</p>
+                    </div>
+                </div>
+            `;
+            
+            reportForImage.innerHTML = imageHTML;
+        }
+        
+        // 保存结果为图片
+        function saveResultAsImage() {
+            // 显示加载提示
+            const originalText = saveResultBtn.innerHTML;
+            saveResultBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成图片中...';
+            saveResultBtn.disabled = true;
+            
+            // 使用html2canvas生成图片
+            html2canvas(reportForImage, {
+                scale: 2,
+                backgroundColor: '#fff5f9',
+                useCORS: true,
+                logging: false,
+                width: 500,
+                height: reportForImage.scrollHeight + 100
+            }).then(canvas => {
+                // 将canvas转换为图片URL
+                const imageURL = canvas.toDataURL('image/png');
+                
+                // 创建下载链接
+                const link = document.createElement('a');
+                link.href = imageURL;
+                link.download = '爱情基因检测报告.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // 恢复按钮状态
+                saveResultBtn.innerHTML = originalText;
+                saveResultBtn.disabled = false;
+            }).catch(error => {
+                console.error('生成图片失败:', error);
+                alert('生成图片失败，请重试');
+                
+                // 恢复按钮状态
+                saveResultBtn.innerHTML = originalText;
+                saveResultBtn.disabled = false;
+            });
+        }
+        
+        // 回到首页
+        function goToHome() {
+            showPage(homePage);
+        }
+        
+        // 显示咨询确认
+        function showConsultConfirm() {
+            confirmModal.classList.add('active');
+        }
+        
+        // 关闭确认模态框
+        function closeConfirmModal() {
+            confirmModal.classList.remove('active');
+        }
+        
+        // 前往咨询
+        function goToConsult() {
+            closeConfirmModal();
+            window.open('https://xhslink.com/m/genPHyd6j0', '_blank');
+        }
+        
+        // 前往更多测试
+        function goToMoreTests() {
+            window.open('https://xhslink.com/m/genPHyd6j0', '_blank');
+        }
+    </script>
+</body>
+</html>
